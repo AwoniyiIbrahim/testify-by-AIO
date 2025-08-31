@@ -67,6 +67,7 @@ def home():
         .join(TestResult)
         .group_by(User.id)
         .order_by(func.max(TestResult.score).desc())
+        .limit(5)
     ).all()
 
     return render_template('index.html',
@@ -76,13 +77,22 @@ def home():
 @app.route('/register', methods=["GET", "POST"])
 def register():
     if request.method == "POST":
+        email = request.form.get('email')
+        
+        result = db.session.execute(db.select(User).where(User.email == email))
+        existing_user = result.scalar()
+
+        if existing_user:
+            flash("That email is already registered. Please log in instead.")
+            return redirect(url_for('login'))
+
         hash_and_salted_password = generate_password_hash(
             request.form.get('password'),
             method='pbkdf2:sha256',
             salt_length=8
         )
         new_user = User(
-            email=request.form.get('email'),
+            email=email,
             password=hash_and_salted_password,
             name=request.form.get('name')
         )
@@ -90,25 +100,30 @@ def register():
         db.session.commit()
         login_user(new_user)
         return redirect(url_for('dashboard'))
+
     return render_template('register.html', logged_in=current_user.is_authenticated)
 
-@app.route('/login', methods=["GET", "POST"])
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')
         result = db.session.execute(db.select(User).where(User.email == email))
         user = result.scalar()
+
         if not user:
-            flash("That email does not exist, please try again.")
-            return redirect(url_for('login'))
+            flash("That email does not exist. Please register first.")
+            return redirect(url_for('register')) 
         elif not check_password_hash(user.password, password):
-            flash('Password incorrect, please try again.')
+            flash("Password incorrect, please try again.")
             return redirect(url_for('login'))
         else:
             login_user(user)
             return redirect(url_for('dashboard'))
+
     return render_template("login.html", logged_in=current_user.is_authenticated)
+
 
 @app.route('/test')
 @login_required
