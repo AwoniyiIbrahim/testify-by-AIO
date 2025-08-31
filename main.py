@@ -19,7 +19,7 @@ load_dotenv(dotenv_path="mail.env")
 # App setup
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("API_KEY")
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URL","sqlite:///local.db")
 
 
 
