@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="text-center">
+    <h2 class="fw-bold">Welcome {{ current_user.name }}</h2>
+    <p class="lead">Your highest test score: <span class="fw-bold text-primary">{{ highest_score }}</span></p>
+    
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <a href="{{ url_for('test') }}" class="btn btn-primary btn-lg">Take a Test</a>
+      <a href="{{ url_for('logout_route') }}" class="btn btn-danger btn-lg">Logout</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

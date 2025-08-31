@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="box">
+  <h2 class="title">Take the Test</h2>
+  <form method="POST" action="{{ url_for('submit_test') }}">
+    {% for q in questions %}
+      <div class="question">
+        <p><strong>Q{{ q.id }}:</strong> {{ q.question }}</p>
+        {% for opt in q.options %}
+          <label>
+            <input type="radio" name="q{{ q.id }}" value="{{ opt }}">
+            {{ opt }}
+          </label><br>
+        {% endfor %}
+      </div>
+      <hr>
+    {% endfor %}
+
+    <div class="actions">
+      <button type="submit" class="btn">Submit Test</button>
+      <a href="{{ url_for('submit_test') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="btn end-btn">End Test</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

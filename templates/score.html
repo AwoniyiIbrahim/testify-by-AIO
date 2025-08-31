@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="box">
+  <h2 class="title">Test Completed 🎉</h2>
+  <p>You scored <strong>{{ score }}</strong> out of <strong>{{ total }}</strong>.</p>
+
+  {% if score == total %}
+    <p>🔥 Perfect score! You’re a genius!</p>
+  {% elif score > (total/2) %}
+    <p>👏 Great job! You passed well.</p>
+  {% else %}
+    <p>💡 Keep practicing, you’ll improve next time!</p>
+  {% endif %}
+
+  <div class="actions">
+    <a href="{{ url_for('dashboard') }}" class="btn">Go to Dashboard</a>
+    <a href="{{ url_for('home') }}" class="btn">Go Home</a>
+  </div>
+</div>
+{% endblock %}
